@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'IngSis.snippet-share' is invalid and this project uses 'IngSis.snippetshare' instead.
+* The original package name 'ingsis.snippet-share' is invalid and this project uses 'ingsis.snippetshare' instead.
 
 # Getting Started
 

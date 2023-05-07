@@ -1,2 +1,2 @@
 # snippet-share
-Snippet Share Service for IngSis
+Snippet Share Service for ingsis
