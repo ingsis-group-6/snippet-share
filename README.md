@@ -1,9 +1,9 @@
 # snippet-share
 Snippet Share Service for ingsis
 
-## This service is able to:
+## Functionalities:
 
-Share snippet
+Share a snippet
 
 See snippets that people shared to me(userId)
 
