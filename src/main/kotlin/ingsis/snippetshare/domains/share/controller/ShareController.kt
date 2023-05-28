@@ -1,38 +1,47 @@
 package ingsis.snippetshare.domains.share.controller
 
-import ingsis.snippetshare.domains.mock.repository.ShareRepositoryMock
 import ingsis.snippetshare.domains.share.dto.ShareDTO
 import ingsis.snippetshare.domains.share.model.Share
 import ingsis.snippetshare.domains.share.repository.ShareRepository
-import ingsis.snippetshare.domains.share.repository.ShareRepositoryImpl
 import ingsis.snippetshare.domains.share.service.ShareService
 import ingsis.snippetshare.domains.share.service.ShareServiceImpl
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import java.util.Date
+import java.util.*
 
 @RestController
 @CrossOrigin("*")
 class ShareController {
 
-    val shareService: ShareService = ShareServiceImpl(ShareRepositoryMock())
+    @Autowired
+    private var shareService: ShareService
+
+    @Autowired
+    constructor(shareService: ShareService) {
+        this.shareService = shareService
+    }
+
     @PostMapping("/share")
     @ResponseBody
     fun share(@RequestHeader("Authorization") token: String, @RequestBody shareDto: ShareDTO): Share {
-        return shareService.share(shareDto, token)
+        val userId = token.split(" ")[1]
+        return shareService.share(shareDto, userId)
     }
 
     @GetMapping("/share")
     fun getSharedWithMePosts(@RequestHeader("Authorization") token: String): List<Share> {
-        return shareService.getSharedPosts(token)
+        val userId = token.split(" ")[1]
+        return shareService.getSharedPosts(userId)
     }
 
     @GetMapping("/share/shared_with_me")
     fun getSharedWithMe(@RequestHeader("Authorization") token: String): List<Share> {
-        return shareService.getSharedWithMePosts(token)
+        val userId = token.split(" ")[1]
+        return shareService.getSharedWithMePosts(userId)
     }
 
     @DeleteMapping("/share/{id}")
-    fun deleteShare(@RequestHeader("Authorization") token: String, @PathVariable(value = "id") id: String) {
+    fun deleteShare(@RequestHeader("Authorization") token: String, @PathVariable(value = "id") id: UUID) {
         shareService.deleteShare(id)
     }
 
