@@ -45,5 +45,20 @@ class ShareController {
         shareService.deleteShare(id)
     }
 
+    @GetMapping("/public")
+    fun publicEndpoint(): String{
+        return "hello"
+    }
+
+    @GetMapping("/private")
+    fun privateEndpoint(): String{
+        return "private"
+    }
+
+    @GetMapping("/permission")
+    fun permEndpoint(): String{
+        return "permission"
+    }
+
 
 }
