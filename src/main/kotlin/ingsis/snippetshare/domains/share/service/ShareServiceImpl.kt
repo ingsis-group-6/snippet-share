@@ -22,6 +22,7 @@ class ShareServiceImpl: ShareService {
             shareDto.sharedId,
             userId
         )
+        println(share)
         return this.shareRepository.save(share)
     }
 

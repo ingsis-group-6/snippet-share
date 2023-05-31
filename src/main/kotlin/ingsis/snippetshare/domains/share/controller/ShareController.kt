@@ -2,9 +2,7 @@ package ingsis.snippetshare.domains.share.controller
 
 import ingsis.snippetshare.domains.share.dto.ShareDTO
 import ingsis.snippetshare.domains.share.model.Share
-import ingsis.snippetshare.domains.share.repository.ShareRepository
 import ingsis.snippetshare.domains.share.service.ShareService
-import ingsis.snippetshare.domains.share.service.ShareServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -38,6 +36,12 @@ class ShareController {
     fun getSharedWithMe(@RequestHeader("Authorization") token: String): List<Share> {
         val userId = token.split(" ")[1]
         return shareService.getSharedWithMePosts(userId)
+    }
+
+    @GetMapping("/share/shared_with_me/id")
+    fun getSharedWithMeIds(@RequestHeader("Authorization") token: String): List<UUID> {
+        val userId = token.split(" ")[1]
+        return shareService.getSharedWithMePosts(userId).map { share -> UUID.fromString(share.snippetId)}
     }
 
     @DeleteMapping("/share/{id}")
