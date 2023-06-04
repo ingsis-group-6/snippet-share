@@ -49,5 +49,26 @@ class ShareController {
         shareService.deleteShare(id)
     }
 
+    @DeleteMapping("/share/by_snippet/{id}")
+    fun deleteShareBySnippet(@RequestHeader("Authorization") token: String, @PathVariable(value = "id") id: String) {
+        val userId = token.split(" ")[1]
+        shareService.deleteShareBySnippet(id, userId)
+    }
+
+    @GetMapping("/public")
+    fun publicEndpoint(): String{
+        return "hello"
+    }
+
+    @GetMapping("/private")
+    fun privateEndpoint(): String{
+        return "private"
+    }
+
+    @GetMapping("/permission")
+    fun permEndpoint(): String{
+        return "permission"
+    }
+
 
 }

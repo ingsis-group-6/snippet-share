@@ -3,18 +3,24 @@ package ingsis.snippetshare.domains.share.service
 import ingsis.snippetshare.domains.share.dto.ShareDTO
 import ingsis.snippetshare.domains.share.model.Share
 import ingsis.snippetshare.domains.share.repository.ShareRepository
+import jakarta.persistence.EntityManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
+@Transactional
 class ShareServiceImpl: ShareService {
 
     @Autowired
     private var shareRepository: ShareRepository
 
-    constructor(shareRepository: ShareRepository) {
+    private var entityManager: EntityManager
+
+    constructor(shareRepository: ShareRepository, entityManager: EntityManager) {
         this.shareRepository = shareRepository
+        this.entityManager = entityManager
     }
     override fun share(shareDto: ShareDTO, userId: String): Share {
         val share = Share(
@@ -36,5 +42,14 @@ class ShareServiceImpl: ShareService {
 
     override fun deleteShare(id: UUID) {
         this.shareRepository.deleteById(id)
+    }
+
+    override fun deleteShareBySnippet(id: String, userId: String) {
+        entityManager.createQuery(
+            "DELETE FROM Share s WHERE s.snippetId = :snippetId"
+        ).apply {
+            setParameter("snippetId", id)
+            executeUpdate()
+        }
     }
 }
