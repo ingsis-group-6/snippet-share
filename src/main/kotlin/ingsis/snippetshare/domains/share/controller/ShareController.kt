@@ -7,6 +7,7 @@ import ingsis.snippetshare.domains.share.service.ShareService
 import ingsis.snippetshare.domains.share.service.ShareServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 import java.util.*
 
 @RestController
@@ -23,8 +24,8 @@ class ShareController {
 
     @PostMapping("/share")
     @ResponseBody
-    fun share(@RequestHeader("Authorization") token: String, @RequestBody shareDto: ShareDTO): Share {
-        val userId = token.split(" ")[1]
+    fun share(@RequestBody shareDto: ShareDTO): Share {
+        val userId = "principal.name"
         return shareService.share(shareDto, userId)
     }
 

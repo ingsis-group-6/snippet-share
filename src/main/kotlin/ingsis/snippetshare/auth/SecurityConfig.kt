@@ -24,13 +24,16 @@ class SecurityConfig {
         This is where we configure the security required for our endpoints and setup our app to serve as
         an OAuth2 Resource Server, using JWT validation.
         */
-        http.authorizeHttpRequests()
-            .requestMatchers("/public").permitAll()
-            .requestMatchers("/private").authenticated()
-            .requestMatchers("/permission").hasAuthority("read:shared-snippets")
+
+        http.authorizeRequests()
+            .mvcMatchers("/share").permitAll()
+            .mvcMatchers("/share/**").permitAll()
+            .mvcMatchers("/private").authenticated()
+            .mvcMatchers("/permission").hasAuthority("read:shared-snippets")
             .and().cors()
-            .and().oauth2ResourceServer().jwt()
-        return http.build()
+            .and().csrf().disable()
+            .oauth2ResourceServer().jwt();
+        return http.build();
     }
 
     @Bean
