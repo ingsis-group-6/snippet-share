@@ -2,6 +2,7 @@ package ingsis.snippetshare.auth
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
@@ -10,27 +11,33 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.web.SecurityFilterChain;
 
 
-@EnableWebSecurity
+@Configuration
 class SecurityConfig {
     @Value("\${auth0.audience}")
     private val audience: String? = null
 
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private val issuer: String? = null
+
     @Bean
-    @Throws(Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         /*
         This is where we configure the security required for our endpoints and setup our app to serve as
         an OAuth2 Resource Server, using JWT validation.
         */
-        http.authorizeHttpRequests()
-            .requestMatchers("/public").permitAll()
-            .requestMatchers("/private").authenticated()
-            .requestMatchers("/permission").hasAuthority("read:shared-snippets")
-            .and().cors()
-            .and().oauth2ResourceServer().jwt()
-        return http.build()
+        return http.authorizeHttpRequests {
+            it.requestMatchers("/share").permitAll()
+            it.requestMatchers("/share/**").permitAll()
+            it.requestMatchers("/public").permitAll()
+            it.requestMatchers("/private").authenticated()
+            it.requestMatchers("/permission").hasAuthority("SCOPE_read:shared-snippets")
+        }
+            .cors().and()
+            .csrf().disable()
+            .oauth2ResourceServer {
+                it.jwt()
+            }
+            .build()
     }
 
     @Bean
