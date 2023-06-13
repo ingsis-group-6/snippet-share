@@ -24,25 +24,25 @@ class ShareController {
 
     @PostMapping("/share")
     @ResponseBody
-    fun share(@RequestBody shareDto: ShareDTO): Share {
-        val userId = "principal.name"
+    fun share(@RequestBody shareDto: ShareDTO, principal:Principal): Share {
+        val userId = principal.name
         return shareService.share(shareDto, userId)
     }
 
     @GetMapping("/share")
-    fun getSharedWithMePosts(@RequestHeader("Authorization") token: String): List<Share> {
-        val userId = token.split(" ")[1]
+    fun getShares(principal: Principal): List<Share> {
+        val userId = principal.name
         return shareService.getSharedPosts(userId)
     }
 
     @GetMapping("/share/shared_with_me")
-    fun getSharedWithMe(@RequestHeader("Authorization") token: String): List<Share> {
-        val userId = token.split(" ")[1]
+    fun getSharedWithMe(principal: Principal): List<Share> {
+        val userId = principal.name
         return shareService.getSharedWithMePosts(userId)
     }
 
     @DeleteMapping("/share/{id}")
-    fun deleteShare(@RequestHeader("Authorization") token: String, @PathVariable(value = "id") id: UUID) {
+    fun deleteShare(principal: Principal, @PathVariable(value = "id") id: UUID) {
         shareService.deleteShare(id)
     }
 
