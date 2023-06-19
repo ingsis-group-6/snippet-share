@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.*;
@@ -18,7 +17,6 @@ class SecurityConfig {
 
     @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private val issuer: String? = null
-
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         /*
@@ -26,11 +24,9 @@ class SecurityConfig {
         an OAuth2 Resource Server, using JWT validation.
         */
         return http.authorizeHttpRequests {
-            it.requestMatchers("/share").permitAll()
-            it.requestMatchers("/share/**").permitAll()
+            it.requestMatchers("/share").authenticated()
+            it.requestMatchers("/share/**").authenticated()
             it.requestMatchers("/public").permitAll()
-            it.requestMatchers("/private").authenticated()
-            it.requestMatchers("/permission").hasAuthority("SCOPE_read:shared-snippets")
         }
             .cors().and()
             .csrf().disable()

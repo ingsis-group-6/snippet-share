@@ -3,8 +3,11 @@ package ingsis.snippetshare.domains.share.service
 import ingsis.snippetshare.domains.share.dto.ShareDTO
 import ingsis.snippetshare.domains.share.model.Share
 import ingsis.snippetshare.domains.share.repository.ShareRepository
+import ingsis.snippetshare.error.HTTPError
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import java.lang.Error
 import java.util.*
 
 @Service
@@ -17,6 +20,7 @@ class ShareServiceImpl: ShareService {
         this.shareRepository = shareRepository
     }
     override fun share(shareDto: ShareDTO, userId: String): Share {
+        if (shareDto.sharedId == userId) throw HTTPError("Conflict, can't share your snippet to yourself",HttpStatus.CONFLICT)
         val share = Share(
             shareDto.snippetId,
             shareDto.sharedId,
