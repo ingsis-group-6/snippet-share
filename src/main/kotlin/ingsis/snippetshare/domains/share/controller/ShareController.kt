@@ -53,5 +53,11 @@ class ShareController {
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
+    @DeleteMapping("/share/by_snippet/{id}")
+    fun deleteShareBySnippet(principal: Principal, @PathVariable(value = "id") id: String) {
+        val userId = principal.name
+        shareService.deleteShareBySnippet(id)
+    }
+
 
 }

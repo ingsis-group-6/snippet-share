@@ -10,5 +10,5 @@ interface ShareService {
     fun getSharedPosts(userId: String): List<Share>
     fun getSharedWithMePosts(userId: String): List<Share>
     fun deleteShare(id: UUID)
-
+    fun deleteShareBySnippet(id:String)
 }

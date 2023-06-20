@@ -40,4 +40,8 @@ class ShareServiceImpl: ShareService {
     override fun deleteShare(id: UUID) {
         this.shareRepository.deleteById(id)
     }
+
+    override fun deleteShareBySnippet(id: String) {
+        this.shareRepository.deleteSharesBySnippetId(id)
+    }
 }
