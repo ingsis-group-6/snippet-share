@@ -15,7 +15,7 @@ services:
     container_name: "datadog-dev-env"
     environment:
       - DD_API_KEY=${DD_API_KEY}
-      - DD_SITE=datadoghq.com
+      - DD_SITE=us5.datadoghq.com
       - DD_LOGS_ENABLED=true
       - DD_APM_ENABLED=true
     volumes:

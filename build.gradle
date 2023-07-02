@@ -25,6 +25,9 @@ dependencies {
 	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.metrics:spring-metrics:0.5.1.RELEASE'
+    implementation 'com.netflix.spectator:spectator-api:0.55.0'
+    implementation 'org.springframework:spring-aspects'
 }
 
 tasks.withType(KotlinCompile) {
