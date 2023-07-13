@@ -4,6 +4,8 @@ import ingsis.snippetshare.domains.share.dto.ShareDTO
 import ingsis.snippetshare.domains.share.model.Share
 import ingsis.snippetshare.domains.share.service.ShareService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
 import java.util.*
@@ -22,41 +24,39 @@ class ShareController {
 
     @PostMapping("/share")
     @ResponseBody
-    fun share(principal: Principal, @RequestBody shareDto: ShareDTO): Share {
+    fun share(principal: Principal,@RequestBody shareDto: ShareDTO): ResponseEntity<Share> {
         val userId = principal.name
-        return shareService.share(shareDto, userId)
+        return ResponseEntity(shareService.share(shareDto, userId), HttpStatus.CREATED)
     }
 
     @GetMapping("/share")
-    fun getSharedWithMePosts(principal: Principal): List<Share> {
+    fun getSharedWithMePosts(principal: Principal): ResponseEntity<List<Share>> {
         val userId = principal.name
-        return shareService.getSharedPosts(userId)
+        return ResponseEntity(shareService.getSharedPosts(userId), HttpStatus.OK)
     }
 
     @GetMapping("/share/shared_with_me")
-    fun getSharedWithMe(principal: Principal): List<Share> {
+    fun getSharedWithMe(principal: Principal): ResponseEntity<List<Share>> {
         val userId = principal.name
-        return shareService.getSharedWithMePosts(userId)
+        return ResponseEntity(shareService.getSharedWithMePosts(userId), HttpStatus.OK)
+    }
+
+    @GetMapping("/share/shared_with_me/id")
+    fun getSharedWithMeIds(principal: Principal): ResponseEntity<List<UUID>> {
+        val userId = principal.name
+        return ResponseEntity(shareService.getSharedWithMePosts(userId).map { share -> UUID.fromString(share.snippetId)}, HttpStatus.OK)
     }
 
     @DeleteMapping("/share/{id}")
-    fun deleteShare(principal: Principal, @PathVariable(value = "id") id: UUID) {
+    fun deleteShare(principal: Principal, @PathVariable(value = "id") id: UUID) : ResponseEntity<Unit>{
         shareService.deleteShare(id)
+        return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
-    @GetMapping("/public")
-    fun publicEndpoint(): String{
-        return "hello"
-    }
-
-    @GetMapping("/private")
-    fun privateEndpoint(): String{
-        return "private"
-    }
-
-    @GetMapping("/permission")
-    fun permEndpoint(): String{
-        return "permission"
+    @DeleteMapping("/share/by_snippet/{id}")
+    fun deleteShareBySnippet(principal: Principal, @PathVariable(value = "id") id: String) {
+        val userId = principal.name
+        shareService.deleteShareBySnippet(id)
     }
 
 
